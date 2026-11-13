@@ -2,6 +2,7 @@
 title: "Dutch Rent Analysis"
 format: html
 editor: source
+author: "Kim Gronewald & Martin Carricas Asin"
 ---
 
 ```{r}
@@ -18,10 +19,10 @@ library(here)
 ```
 
 ```{r}
+#| echo: false
+#| message: false
 land_use <- vroom(here("data","CBS Land Use.csv"))
 rent <- vroom(here("data","CBS Rents.csv"))
 ```
-```{r}
-id_regions <- land_use$Regions
-```
+
 
