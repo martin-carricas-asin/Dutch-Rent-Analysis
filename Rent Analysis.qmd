@@ -10,4 +10,15 @@ editor: visual
 #| label: initialisation
 
 here::i_am("Dutch-Rent-Analysis.Rproj")
+library(vroom)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(here)
 ```
+
+```{r}
+land_use <- vroom(here("data","CBS Land Use.csv"))
+rent <- vroom(here("data","CBS Rents.csv"))
+```
+
