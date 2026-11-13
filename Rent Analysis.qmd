@@ -18,7 +18,15 @@ library(here)
 ```
 
 ```{r}
+#| echo: false
+#| message: false
 land_use <- vroom(here("data","CBS Land Use.csv"))
 rent <- vroom(here("data","CBS Rents.csv"))
 ```
+```{r}
+names(land_use)
+
+names(rent)
+```
+The Land Use dataset has `r nrow(land_use)` rows and `r ncol(land_use)` columns. The rent dataset has `r nrow(rent)` rows and `r ncol(rent)` columns
 
