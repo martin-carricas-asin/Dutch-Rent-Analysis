@@ -3,3 +3,11 @@ title: "Dutch Rent Analysis"
 format: html
 editor: visual
 ---
+
+```{r}
+#| echo: false
+#| message: false
+#| label: initialisation
+
+here::i_am("Dutch-Rent-Analysis.Rproj")
+```
