@@ -25,6 +25,8 @@ land_use <- vroom(here("data","CBS Land Use.csv"))
 rent <- vroom(here("data","CBS Rents.csv"))
 ```
 
+Github link: https://github.com/martin-carricas-asin/Dutch-Rent-Analysis
+
 ```{r}
  
 names(land_use)
