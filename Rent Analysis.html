@@ -78,50 +78,11 @@ ul.task-list li input[type="checkbox"] {
 <p>Github link: https://github.com/martin-carricas-asin/Dutch-Rent-Analysis</p>
 <p>Data sources:</p>
 <ul>
-<li><p>Land use data: https://opendata.cbs.nl/portal.html?_la=en&amp;_catalog=CBS&amp;tableId=70262ENG&amp;_theme=1178</p></li>
+<li><p>proximity to facilities, regional data: https://opendata.cbs.nl/portal.html?_la=en&amp;_catalog=CBS&amp;tableId=80305ENG&amp;_theme=1187</p></li>
 <li><p>Rent increase data: https://opendata.cbs.nl/portal.html?_la=en&amp;_catalog=CBS&amp;tableId=83162ENG&amp;_theme=1175</p></li>
 </ul>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] "ID"                                  
- [2] "Regions"                             
- [3] "Periods"                             
- [4] "TotalSurface_1"                      
- [5] "TransportTotal_2"                    
- [6] "Railroad_3"                          
- [7] "MainRoad_4"                          
- [8] "Airport_5"                           
- [9] "BuiltUpAreaTotal_6"                  
-[10] "Residential_7"                       
-[11] "IndustryBusinessPublicInstitutions_8"
-[12] "SocioCulturalFacilities_9"           
-[13] "SemiBuiltUpAreaTotal_10"             
-[14] "MiningArea_11"                       
-[15] "BuildingSite_12"                     
-[16] "OtherSemiBuiltUpArea_13"             
-[17] "RecreationTotal_14"                  
-[18] "ParkAndPublicGarden_15"              
-[19] "SportGrounds_16"                     
-[20] "OtherRecreationUsage_17"             
-[21] "AgricultureTotal_18"                 
-[22] "Greenhouses_19"                      
-[23] "OtherAgriculturalUsage_20"           
-[24] "WoodlandAndNatureTotal_21"           
-[25] "Woodland_22"                         
-[26] "NaturalOpenArea_23"                  
-[27] "WaterTotal_24"                       
-[28] "InlandWaterTotal_25"                 
-[29] "TidalWaterTotal_26"                  </code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "ID"                                  
-[2] "Regions"                             
-[3] "Periods"                             
-[4] "RentIncreaseIncludingHarmonisation_1"
-[5] "RentIncreaseExcludingHarmonisation_2"</code></pre>
-</div>
-</div>
-<p>The Land Use dataset has 1547 rows and 29 columns. The rent dataset has 252 rows and 5 columns</p>
+<p>The the source of the data sets is CBS Open data Statline which is the database of the Statistics Netherlands. This is an independent government institution responsible for gathering and publishing various official statistics about the Netherlands. The land use data set is based on a land use file which documents area statistics for different regions in the netherlands.This land use file provides data only for a subset of years, for all other years only total surface area is given. Due to the methodology behind the land use file being updated, no new data has been reported since 2017. Any corrections that were found in the land use file for data on previous years were not transfered to this data set.</p>
+<p>The proximity to facilities dataset has 340 rows and 128 columns. The rent dataset has 252 rows and 5 columns</p>
 </section>
 
 </main>

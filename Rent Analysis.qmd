@@ -3,7 +3,6 @@ title: "Dutch Rent Analysis"
 format: html
 editor: source
 author: "Kim Gronewald & Martin Carricas Asin"
-lightbox: true
 ---
 
 ```{r}
@@ -22,7 +21,140 @@ library(here)
 ```{r}
 #| echo: false
 #| message: false
-land_use <- vroom(here("data","CBS Land Use.csv"))
+
+proximity <- vroom(here("data","80305ENG_UntypedDataSet_20261117141721.csv"), 
+                        col_types = cols(
+  ID = col_integer(),
+  Regions = col_character(),
+  Periods = col_character(),
+  DistanceToGPPractice_1 = col_double(),
+  Within1Km_2 = col_double(),
+  Within3Km_3 = col_double(),
+  Within5Km_4 = col_double(),
+  DistanceToGPPost_5 = col_double(),
+  DistanceToPharmacy_6 = col_double(),
+  DistanceToHospital_7 = col_double(),
+  Within5Km_8 = col_double(),
+  Within10Km_9 = col_double(),
+  Within20Km_10 = col_double(),
+  DistanceToHospital_11 = col_double(),
+  Within5Km_12 = col_double(),
+  Within10Km_13 = col_double(),
+  Within20Km_14 = col_double(),
+  DistanceToYouthHealthCentre_15 = col_double(),
+  DistanceToPhysiotherapist_16 = col_double(),
+  Within1Km_17 = col_double(),
+  Within3Km_18 = col_double(),
+  Within5Km_19 = col_double(),
+  DistanceToLargeSupermarket_20 = col_double(),
+  Within1Km_21 = col_double(),
+  Within3Km_22 = col_double(),
+  Within5Km_23 = col_double(),
+  DistanceToShopForOtherDailyFood_24 = col_double(),
+  Within1Km_25 = col_double(),
+  Within3Km_26 = col_double(),
+  Within5Km_27 = col_double(),
+  DistanceToDepartmentStore_28 = col_double(),
+  Within5Km_29 = col_double(),
+  Within10Km_30 = col_double(),
+  Within20Km_31 = col_double(),
+  DistanceToCafeEtc_32 = col_double(),
+  Within1Km_33 = col_double(),
+  Within3Km_34 = col_double(),
+  Within5Km_35 = col_double(),
+  DistanceToCafeteriaEtc_36 = col_double(),
+  Within1Km_37 = col_double(),
+  Within3Km_38 = col_double(),
+  Within5Km_39 = col_double(),
+  DistanceToRestaurant_40 = col_double(),
+  Within1Km_41 = col_double(),
+  Within3Km_42 = col_double(),
+  Within5Km_43 = col_double(),
+  DistanceToHotelEtc_44 = col_double(),
+  Within5Km_45 = col_double(),
+  Within10Km_46 = col_double(),
+  Within20Km_47 = col_double(),
+  DistanceToDaycareCentres_48 = col_double(),
+  Within1Km_49 = col_double(),
+  Within3Km_50 = col_double(),
+  Within5Km_51 = col_double(),
+  DistanceToOutOfSchoolCare_52 = col_double(),
+  Within1Km_53 = col_double(),
+  Within3Km_54 = col_double(),
+  Within5Km_55 = col_double(),
+  DistanceToSchool_56 = col_double(),
+  Within1Km_57 = col_double(),
+  Within3Km_58 = col_double(),
+  Within5Km_59 = col_double(),
+  DistanceToSchool_60 = col_double(),
+  Within3Km_61 = col_double(),
+  Within5Km_62 = col_double(),
+  Within10Km_63 = col_double(),
+  DistanceToSchool_64 = col_double(),
+  Within3Km_65 = col_double(),
+  Within5Km_66 = col_double(),
+  Within10Km_67 = col_double(),
+  DistanceToSchool_68 = col_double(),
+  Within3Km_69 = col_double(),
+  Within5Km_70 = col_double(),
+  Within10Km_71 = col_double(),
+  Within10Km_72 = col_double(),
+  Within20Km_73 = col_double(),
+  Within50Km_74 = col_double(),
+  Within10Km_75 = col_double(),
+  Within20Km_76 = col_double(),
+  Within50Km_77 = col_double(),
+  Within10Km_78 = col_double(),
+  Within20Km_79 = col_double(),
+  Within50Km_80 = col_double(),
+  Within10Km_81 = col_double(),
+  Within20Km_82 = col_double(),
+  Within50Km_83 = col_double(),
+  Within10Km_84 = col_double(),
+  Within20Km_85 = col_double(),
+  Within50Km_86 = col_double(),
+  DistanceToPublicGreenTotal_87 = col_double(),
+  DistanceToParkOrPublicGarden_88 = col_double(),
+  DistanceToRecreationalTerrain_89 = col_double(),
+  DistanceToForest_90 = col_double(),
+  DistanceToOpenNatTerrainTotal_91 = col_double(),
+  DistanceToOpenDryNaturalTerrain_92 = col_double(),
+  DistanceToOpenWetNaturalTerrain_93 = col_double(),
+  DistanceToSemiPublicGreenTotal_94 = col_double(),
+  DistanceToSportsArea_95 = col_double(),
+  DistanceToAllotmentGarden_96 = col_double(),
+  DistanceToRecreationalArea_97 = col_double(),
+  DistanceToCemetery_98 = col_double(),
+  DistanceToRecreationalInlandWaters_99 = col_double(),
+  DistanceToMainRoadEntrance_100 = col_double(),
+  DistanceToTrainStationAllTypes_101 = col_double(),
+  DistanceToImportantTransferStation_102 = col_double(),
+  DistanceToLibrary_103 = col_double(),
+  DistanceToIndoorSwimmingPool_104 = col_double(),
+  DistanceToArtificialIceSkatingRink_105 = col_double(),
+  DistanceToMuseum_106 = col_double(),
+  Within5Km_107 = col_double(),
+  Within10Km_108 = col_double(),
+  Within20Km_109 = col_double(),
+  DistanceToPerformingArts_110 = col_double(),
+  Within5Km_111 = col_double(),
+  Within10Km_112 = col_double(),
+  Within20Km_113 = col_double(),
+  DistanceToPopMusicVenue_114 = col_double(),
+  DistanceToCinema_115 = col_double(),
+  Within5Km_116 = col_double(),
+  Within10Km_117 = col_double(),
+  Within20Km_118 = col_double(),
+  DistanceToSauna_119 = col_double(),
+  DistanceToTanningSalon_120 = col_double(),
+  DistanceToAttraction_121 = col_double(),
+  Within10Km_122 = col_double(),
+  Within20Km_123 = col_double(),
+  Within50Km_124 = col_double(),
+  DistanceToFireStation_125 = col_double(),
+  .delim = ";"))
+                   
+
 rent <- vroom(here("data","CBS Rents.csv"))
 ```
 
@@ -32,63 +164,23 @@ Github link: https://github.com/martin-carricas-asin/Dutch-Rent-Analysis
 
 Data sources:
 
-- Land use data: https://opendata.cbs.nl/portal.html?\_la=en&\_catalog=CBS&tableId=70262ENG&\_theme=1178
+- proximity to facilities, regional data: https://opendata.cbs.nl/portal.html?_la=en&_catalog=CBS&tableId=80305ENG&_theme=1187
 
 - Rent increase data: https://opendata.cbs.nl/portal.html?\_la=en&\_catalog=CBS&tableId=83162ENG&\_theme=1175
 
-```{r}
-#| echo: false
- 
-names(land_use)
- 
-names(rent)
- 
+The the source of the data sets is CBS Open data Statline which is the database of the Statistics Netherlands. This is an independent government institution responsible for gathering and publishing various official statistics about the Netherlands. The land use data set is based on a land use file which documents area statistics for different regions in the netherlands.This land use file provides data only for a subset of years, for all other years only total surface area is given. Due to the methodology behind the land use file being updated, no new data has been reported since 2017. Any corrections that were found in the land use file for data on previous years were not transfered to this data set.
 
-```
 
-The Land Use dataset has `r nrow(land_use)` rows and `r ncol(land_use)` columns. The rent dataset has `r nrow(rent)` rows and `r ncol(rent)` columns
+
+The proximity to facilities dataset has `r nrow(proximity)` rows and `r ncol(proximity)` columns. The rent dataset has `r nrow(rent)` rows and `r ncol(rent)` columns
+
 
 ```{r}
 #| echo: false
-
-land_useD <- land_use |> mutate(Regions = na_if(Regions, "."),
-                                Periods = na_if(Periods, "."),
-                                TotalSurface_1 = as.numeric(na_if(TotalSurface_1, ".")),
-                                TransportTotal_2 = as.numeric(na_if(TransportTotal_2,".")),
-                                Railroad_3 = as.numeric(na_if(Railroad_3,".")),
-                                MainRoad_4 = as.numeric(na_if(MainRoad_4,".")),
-                                Airport_5 = as.numeric(na_if(Airport_5,".")),
-                                BuiltUpAreaTotal_6 = as.numeric(na_if(BuiltUpAreaTotal_6,".")),
-                                Residential_7 = as.numeric(na_if(Residential_7,".")),
-                                IndustryBusinessPublicInstitutions_8 = as.numeric(na_if(IndustryBusinessPublicInstitutions_8,".")),
-                                SocioCulturalFacilities_9 = as.numeric(na_if(SocioCulturalFacilities_9,".")),
-                                SemiBuiltUpAreaTotal_10 = as.numeric(na_if(SemiBuiltUpAreaTotal_10,".")),
-                                MiningArea_11 = as.numeric(na_if(MiningArea_11,".")),
-                                BuildingSite_12 = as.numeric(na_if(BuildingSite_12,".")),
-                                OtherSemiBuiltUpArea_13 = as.numeric(na_if(OtherSemiBuiltUpArea_13,".")),
-                                RecreationTotal_14 = as.numeric(na_if(RecreationTotal_14, ".")),
-                                ParkAndPublicGarden_15 = as.numeric(na_if(ParkAndPublicGarden_15,".")),
-                                SportGrounds_16 = as.numeric(na_if(SportGrounds_16, ".")),
-                                OtherRecreationUsage_17 = as.numeric(na_if(OtherRecreationUsage_17,".")),
-                                AgricultureTotal_18 = as.numeric(na_if(AgricultureTotal_18,".")),
-                                Greenhouses_19 = as.numeric(na_if(Greenhouses_19,".")),
-                                OtherAgriculturalUsage_20 = as.numeric(na_if(OtherAgriculturalUsage_20,".")),
-                                WoodlandAndNatureTotal_21 = as.numeric(na_if(WoodlandAndNatureTotal_21, ".")),
-                                Woodland_22 = as.numeric(na_if(Woodland_22,".")),
-                                NaturalOpenArea_23 = as.numeric(na_if(NaturalOpenArea_23,".")),
-                                WaterTotal_24 = as.numeric(na_if(WaterTotal_24,".")),
-                                InlandWaterTotal_25 = as.numeric(na_if(InlandWaterTotal_25,".")),
-                                TidalWaterTotal_26 = as.numeric(na_if(TidalWaterTotal_26,".")) )
-
-
-```
-
-```{r}
-#| echo: false
-land_useN <- land_useD |> mutate(Periods) |> separate_wider_delim(
+proximityD <- proximity |> mutate(Periods) |> separate_wider_delim(
   Periods,
   delim = "JJ",
-  names = c("Periods","Rest")) |> mutate(Periods = as.numeric(Periods)) |>select(-Rest)
+  names = c("Periods","Rest")) |> mutate(Periods = as.numeric(Periods)) |>select(!Rest)
 
 
 ```
