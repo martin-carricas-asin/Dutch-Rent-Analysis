@@ -3,6 +3,7 @@ title: "Dutch Rent Analysis"
 format: html
 editor: source
 author: "Kim Gronewald & Martin Carricas Asin"
+lightbox: true
 ---
 
 ```{r}
@@ -25,9 +26,18 @@ land_use <- vroom(here("data","CBS Land Use.csv"))
 rent <- vroom(here("data","CBS Rents.csv"))
 ```
 
+## Data description
+
 Github link: https://github.com/martin-carricas-asin/Dutch-Rent-Analysis
 
+Data sources:
+
+- Land use data: https://opendata.cbs.nl/portal.html?\_la=en&\_catalog=CBS&tableId=70262ENG&\_theme=1178
+
+- Rent increase data: https://opendata.cbs.nl/portal.html?\_la=en&\_catalog=CBS&tableId=83162ENG&\_theme=1175
+
 ```{r}
+#| echo: false
  
 names(land_use)
  
@@ -35,6 +45,50 @@ names(rent)
  
 
 ```
- 
 
 The Land Use dataset has `r nrow(land_use)` rows and `r ncol(land_use)` columns. The rent dataset has `r nrow(rent)` rows and `r ncol(rent)` columns
+
+```{r}
+#| echo: false
+
+land_useD <- land_use |> mutate(Regions = na_if(Regions, "."),
+                                Periods = na_if(Periods, "."),
+                                TotalSurface_1 = as.numeric(na_if(TotalSurface_1, ".")),
+                                TransportTotal_2 = as.numeric(na_if(TransportTotal_2,".")),
+                                Railroad_3 = as.numeric(na_if(Railroad_3,".")),
+                                MainRoad_4 = as.numeric(na_if(MainRoad_4,".")),
+                                Airport_5 = as.numeric(na_if(Airport_5,".")),
+                                BuiltUpAreaTotal_6 = as.numeric(na_if(BuiltUpAreaTotal_6,".")),
+                                Residential_7 = as.numeric(na_if(Residential_7,".")),
+                                IndustryBusinessPublicInstitutions_8 = as.numeric(na_if(IndustryBusinessPublicInstitutions_8,".")),
+                                SocioCulturalFacilities_9 = as.numeric(na_if(SocioCulturalFacilities_9,".")),
+                                SemiBuiltUpAreaTotal_10 = as.numeric(na_if(SemiBuiltUpAreaTotal_10,".")),
+                                MiningArea_11 = as.numeric(na_if(MiningArea_11,".")),
+                                BuildingSite_12 = as.numeric(na_if(BuildingSite_12,".")),
+                                OtherSemiBuiltUpArea_13 = as.numeric(na_if(OtherSemiBuiltUpArea_13,".")),
+                                RecreationTotal_14 = as.numeric(na_if(RecreationTotal_14, ".")),
+                                ParkAndPublicGarden_15 = as.numeric(na_if(ParkAndPublicGarden_15,".")),
+                                SportGrounds_16 = as.numeric(na_if(SportGrounds_16, ".")),
+                                OtherRecreationUsage_17 = as.numeric(na_if(OtherRecreationUsage_17,".")),
+                                AgricultureTotal_18 = as.numeric(na_if(AgricultureTotal_18,".")),
+                                Greenhouses_19 = as.numeric(na_if(Greenhouses_19,".")),
+                                OtherAgriculturalUsage_20 = as.numeric(na_if(OtherAgriculturalUsage_20,".")),
+                                WoodlandAndNatureTotal_21 = as.numeric(na_if(WoodlandAndNatureTotal_21, ".")),
+                                Woodland_22 = as.numeric(na_if(Woodland_22,".")),
+                                NaturalOpenArea_23 = as.numeric(na_if(NaturalOpenArea_23,".")),
+                                WaterTotal_24 = as.numeric(na_if(WaterTotal_24,".")),
+                                InlandWaterTotal_25 = as.numeric(na_if(InlandWaterTotal_25,".")),
+                                TidalWaterTotal_26 = as.numeric(na_if(TidalWaterTotal_26,".")) )
+
+
+```
+
+```{r}
+#| echo: false
+land_useN <- land_useD |> mutate(Periods) |> separate_wider_delim(
+  Periods,
+  delim = "JJ",
+  names = c("Periods","Rest")) |> mutate(Periods = as.numeric(Periods)) |>select(-Rest)
+
+
+```
