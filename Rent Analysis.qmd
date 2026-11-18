@@ -189,7 +189,7 @@ Github link: https://github.com/martin-carricas-asin/Dutch-Rent-Analysis
 
 *Data sources:*
 
-- proximity to facilities, regional data: https://opendata.cbs.nl/portal.html?\_la=en&\_catalog=CBS&tableId=80305ENG&\_theme=1187
+- Proximity to facilities, regional data: https://opendata.cbs.nl/portal.html?\_la=en&\_catalog=CBS&tableId=80305ENG&\_theme=1187
 
 - Rent increase data: https://opendata.cbs.nl/portal.html?\_la=en&\_catalog=CBS&tableId=83162ENG&\_theme=1175
 
@@ -197,6 +197,36 @@ The the source of the data sets is CBS Open data Statline which is the database 
 
 The proximity to facilities dataset has `r nrow(proximity)` rows and `r ncol(proximity)` columns. The rent dataset has `r nrow(rent)` rows and `r ncol(rent)` columns
 
+## Individual dataset Descriptives
+
+### Rent Dataset
+The rent dataset has `r nrow(rent)` rows and `r ncol(rent)` columns
+
+```{r}
+rent_region <- rent_clean |>
+  rename(rent_incl=RentIncreaseIncludingHarmonisation_1,
+         rent_excl = RentIncreaseExcludingHarmonisation_2)|>
+  filter(Regions %in% c("NL01", "LD01", "LD02", "LD03","LD04"))|>
+  summarise(
+    across(c(rent_incl,rent_excl),
+      list(
+        mean    = ~mean(.x, na.rm = TRUE),
+        sd      = ~sd(.x, na.rm = TRUE),
+        min     = ~min(.x, na.rm = TRUE),
+        max     = ~max(.x, na.rm = TRUE)
+    ),
+    .names = "{.col}__{.fn}")
+  )|>
+  pivot_longer(everything())|>
+  separate_wider_delim(name, delim = "__", names = c("variable", "statistic")) |>
+  pivot_wider(names_from = variable, values_from = value)
+
+rent_region
+```
+
+
+### Proximity Dataset
+The proximity to facilities dataset has `r nrow(proximity)` rows and `r ncol(proximity)` columns. 
 
 ## Joined Dataset
 
