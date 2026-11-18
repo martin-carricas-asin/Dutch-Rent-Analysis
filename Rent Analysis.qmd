@@ -22,7 +22,7 @@ library(here)
 #| echo: false
 #| message: false
 
-proximity <- vroom(here("data","80305ENG_UntypedDataSet_20261117141721.csv"), 
+proximity <- vroom(here("data","CBS Proximity.csv"), 
                         col_types = cols(
   ID = col_integer(),
   Regions = col_character(),
@@ -155,32 +155,56 @@ proximity <- vroom(here("data","80305ENG_UntypedDataSet_20261117141721.csv"),
   .delim = ";"))
                    
 
-rent <- vroom(here("data","CBS Rents.csv"))
+rent <- vroom(here("data","CBS Rents.csv"),
+              col_types = cols(
+  ID = col_double(),
+  Regions = col_character(),
+  Periods = col_character(),
+  RentIncreaseIncludingHarmonisation_1 = col_double(),
+  RentIncreaseExcludingHarmonisation_2 = col_double(),
+  .delim = ";"
+))
+```
+
+## Period column cleaning
+```{r}
+#| echo: false
+proximity_clean <- proximity |> mutate(Periods) |> separate_wider_delim(
+  Periods,
+  delim = "JJ",
+  names = c("Periods","Rest")) |> mutate(Periods = as.numeric(Periods)) |>select(!Rest)
+```
+
+```{r}
+#| echo: false
+rent_clean <- rent |> mutate(Periods) |> separate_wider_delim(
+  Periods,
+  delim = "JJ",
+  names = c("Periods","Rest")) |> mutate(Periods = as.numeric(Periods)) |>select(!Rest)
 ```
 
 ## Data description
 
 Github link: https://github.com/martin-carricas-asin/Dutch-Rent-Analysis
 
-Data sources:
+*Data sources:*
 
-- proximity to facilities, regional data: https://opendata.cbs.nl/portal.html?_la=en&_catalog=CBS&tableId=80305ENG&_theme=1187
+- proximity to facilities, regional data: https://opendata.cbs.nl/portal.html?\_la=en&\_catalog=CBS&tableId=80305ENG&\_theme=1187
 
 - Rent increase data: https://opendata.cbs.nl/portal.html?\_la=en&\_catalog=CBS&tableId=83162ENG&\_theme=1175
 
 The the source of the data sets is CBS Open data Statline which is the database of the Statistics Netherlands. This is an independent government institution responsible for gathering and publishing various official statistics about the Netherlands. The land use data set is based on a land use file which documents area statistics for different regions in the netherlands.This land use file provides data only for a subset of years, for all other years only total surface area is given. Due to the methodology behind the land use file being updated, no new data has been reported since 2017. Any corrections that were found in the land use file for data on previous years were not transfered to this data set.
 
-
-
 The proximity to facilities dataset has `r nrow(proximity)` rows and `r ncol(proximity)` columns. The rent dataset has `r nrow(rent)` rows and `r ncol(rent)` columns
 
 
+## Joined Dataset
+
 ```{r}
-#| echo: false
-proximityD <- proximity |> mutate(Periods) |> separate_wider_delim(
-  Periods,
-  delim = "JJ",
-  names = c("Periods","Rest")) |> mutate(Periods = as.numeric(Periods)) |>select(!Rest)
-
-
+proximity_rent <- proximity_clean |>
+  inner_join(rent_clean, by=join_by(Regions, Periods))
 ```
+
+
+## Variable Description
+
