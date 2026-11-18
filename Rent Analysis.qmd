@@ -3,6 +3,7 @@ title: "Dutch Rent Analysis"
 format: html
 editor: source
 author: "Kim Gronewald & Martin Carricas Asin"
+df-print: kable
 ---
 
 ```{r}
@@ -200,7 +201,7 @@ The proximity to facilities dataset has `r nrow(proximity)` rows and `r ncol(pro
 ## Individual dataset Descriptives
 
 ### Rent Dataset
-The rent dataset has `r nrow(rent)` rows and `r ncol(rent)` columns
+The rent dataset has `r nrow(rent)` rows and `r ncol(rent)` columns and includes data from `r min(rent_clean$Periods)` to `r max(rent_clean$Periods)`.
 
 ```{r}
 rent_region <- rent_clean |>
@@ -219,7 +220,8 @@ rent_region <- rent_clean |>
   )|>
   pivot_longer(everything())|>
   separate_wider_delim(name, delim = "__", names = c("variable", "statistic")) |>
-  pivot_wider(names_from = variable, values_from = value)
+  pivot_wider(names_from = variable, values_from = value)|>
+  mutate(across(where(is.numeric), ~round(.x, 2)))
 
 rent_region
 ```
