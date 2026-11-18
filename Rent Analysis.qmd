@@ -197,13 +197,14 @@ Github link: https://github.com/martin-carricas-asin/Dutch-Rent-Analysis
 
 The the source of the data sets is CBS Open data Statline which is the database of the Statistics Netherlands. This is an independent government institution responsible for gathering and publishing various official statistics about the Netherlands.
 
-## Individual dataset Descriptives
+## Individual Dataset Descriptives
 
 ### Rent Dataset
 
 The rent dataset has `r nrow(rent)` rows and `r ncol(rent)` columns
 
 ```{r}
+#| echo: false
 rent_region <- rent_clean |>
   rename(rent_incl=RentIncreaseIncludingHarmonisation_1,
          rent_excl = RentIncreaseExcludingHarmonisation_2)|>
@@ -243,6 +244,7 @@ The proximity to facilities dataset has `r nrow(proximity)` rows and `r ncol(pro
 ## Joined Dataset
 
 ```{r}
+
 proximity_rent <- proximity_clean |>
   inner_join(rent_clean, by=join_by(Regions, Periods))
 ```
@@ -251,19 +253,45 @@ proximity_rent <- proximity_clean |>
 
 ## Main Variable: Rent
 
-### graphical representation
+```{r}
+#| echo: false
+common_limits <- range(
+  c(proximity_rent$RentIncreaseIncludingHarmonisation_1,
+    proximity_rent$RentIncreaseExcludingHarmonisation_2),
+  na.rm = TRUE
+)
+```
+
+
+### Graphical Representation
+
+:::: {.columns}
+
+::: {.column width="50%"}
+### Rent increase including Harmonisation
 
 ```{r}
+#| echo: false
 proximity_rent |> ggplot(aes(x=Periods,y=RentIncreaseIncludingHarmonisation_1, group = Regions,
     color = Regions)) + 
-  geom_line()
+  geom_line() +
+  scale_y_continuous(limits = common_limits)
   
 ```
+:::
+
+::: {.column width="50%"}
+### Rent increase excluding Harmonisation
 
 ```{r}
+#| echo: false
 proximity_rent |> ggplot(aes(x=Periods,y=RentIncreaseExcludingHarmonisation_2, group = Regions,
     color = Regions)) + 
-  geom_line()
+  geom_line() +
+  scale_y_continuous(limits = common_limits)
 
-  
 ```
+:::
+
+::::
+
