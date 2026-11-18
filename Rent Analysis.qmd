@@ -168,6 +168,7 @@ rent <- vroom(here("data","CBS Rents.csv"),
 ```
 
 ## Period column cleaning
+
 ```{r}
 #| echo: false
 proximity_clean <- proximity |> mutate(Periods) |> separate_wider_delim(
@@ -194,14 +195,13 @@ Github link: https://github.com/martin-carricas-asin/Dutch-Rent-Analysis
 
 - Rent increase data: https://opendata.cbs.nl/portal.html?\_la=en&\_catalog=CBS&tableId=83162ENG&\_theme=1175
 
-The the source of the data sets is CBS Open data Statline which is the database of the Statistics Netherlands. This is an independent government institution responsible for gathering and publishing various official statistics about the Netherlands. The land use data set is based on a land use file which documents area statistics for different regions in the netherlands.This land use file provides data only for a subset of years, for all other years only total surface area is given. Due to the methodology behind the land use file being updated, no new data has been reported since 2017. Any corrections that were found in the land use file for data on previous years were not transfered to this data set.
-
-The proximity to facilities dataset has `r nrow(proximity)` rows and `r ncol(proximity)` columns. The rent dataset has `r nrow(rent)` rows and `r ncol(rent)` columns
+The the source of the data sets is CBS Open data Statline which is the database of the Statistics Netherlands. This is an independent government institution responsible for gathering and publishing various official statistics about the Netherlands.
 
 ## Individual dataset Descriptives
 
 ### Rent Dataset
-The rent dataset has `r nrow(rent)` rows and `r ncol(rent)` columns and includes data from `r min(rent_clean$Periods)` to `r max(rent_clean$Periods)`.
+
+The rent dataset has `r nrow(rent)` rows and `r ncol(rent)` columns
 
 ```{r}
 rent_region <- rent_clean |>
@@ -221,14 +221,24 @@ rent_region <- rent_clean |>
   pivot_longer(everything())|>
   separate_wider_delim(name, delim = "__", names = c("variable", "statistic")) |>
   pivot_wider(names_from = variable, values_from = value)|>
-  mutate(across(where(is.numeric), ~round(.x, 2)))
+  mutate(across(where(is.numeric),~round(.x,2)))
 
 rent_region
 ```
 
-
 ### Proximity Dataset
-The proximity to facilities dataset has `r nrow(proximity)` rows and `r ncol(proximity)` columns. 
+
+The proximity to facilities dataset has `r nrow(proximity)` rows and `r ncol(proximity)` columns.
+
+| Number of Regions | Time Periods | Years |
+|-------------------------|---------------------------|--------------------|
+| `r nrow(proximity)` | `r length(unique(proximity_clean$Periods))` | `r min(proximity_clean$Periods)`- `r max(proximity_clean$Periods)` |
+
+| Health & Wellbeing | Retail | Hospitality | Childcare | Education | Green Areas | Transport | Leisure & Culture | Fire Stations |
+|--------|--------|--------|--------|--------|--------|--------|--------|--------|
+| `r (mean(proximity_clean$DistanceToGPPractice_1, na.rm = TRUE)+mean(proximity_clean$DistanceToGPPost_5, na.rm = TRUE )+mean(proximity_clean$DistanceToPharmacy_6, na.rm = TRUE )+mean(proximity_clean$DistanceToHospital_7, na.rm = TRUE )+mean(proximity_clean$DistanceToHospital_11, na.rm = TRUE )+mean(proximity_clean$DistanceToYouthHealthCentre_15, na.rm = TRUE )+mean(proximity_clean$DistanceToPhysiotherapist_16, na.rm = TRUE ))/7` | `r (mean(proximity_clean$DistanceToLargeSupermarket_20, na.rm = TRUE)+mean(proximity_clean$DistanceToShopForOtherDailyFood_24, na.rm = TRUE )+mean(proximity_clean$DistanceToDepartmentStore_28, na.rm = TRUE ))/3` | `r (mean(proximity_clean$DistanceToCafeEtc_32, na.rm = TRUE)+mean(proximity_clean$DistanceToCafeteriaEtc_36, na.rm = TRUE )+ mean(proximity_clean$DistanceToRestaurant_40, na.rm = TRUE )+mean(proximity_clean$DistanceToHotelEtc_44, na.rm = TRUE))/4` | `r (mean(proximity_clean$DistanceToDaycareCentres_48, na.rm = TRUE)+mean(proximity_clean$DistanceToOutOfSchoolCare_52, na.rm = TRUE ) )/2` | `r (mean(proximity_clean$DistanceToSchool_56, na.rm = TRUE)+mean(proximity_clean$DistanceToSchool_60, na.rm = TRUE ) + mean(proximity_clean$DistanceToSchool_64, na.rm = TRUE)+mean(proximity_clean$DistanceToSchool_68, na.rm = TRUE ))/4` | `r (mean(proximity_clean$DistanceToPublicGreenTotal_87, na.rm = TRUE)+mean(proximity_clean$DistanceToSemiPublicGreenTotal_94, na.rm = TRUE ) + mean(proximity_clean$DistanceToRecreationalInlandWaters_99, na.rm = TRUE))/3` | `r (mean(proximity_clean$DistanceToMainRoadEntrance_100, na.rm = TRUE)+mean(proximity_clean$DistanceToTrainStationAllTypes_101, na.rm = TRUE ) )/2` | `r (mean(proximity_clean$DistanceToCinema_115, na.rm = TRUE)+mean(proximity_clean$DistanceToLibrary_103, na.rm = TRUE )+mean(proximity_clean$DistanceToIndoorSwimmingPool_104, na.rm = TRUE)+mean(proximity_clean$DistanceToArtificialIceSkatingRink_105, na.rm = TRUE )+mean(proximity_clean$DistanceToMuseum_106, na.rm = TRUE)+mean(proximity_clean$DistanceToPerformingArts_110, na.rm = TRUE )+mean(proximity_clean$DistanceToPopMusicVenue_114, na.rm = TRUE)+mean(proximity_clean$DistanceToSauna_119, na.rm = TRUE )+mean(proximity_clean$DistanceToTanningSalon_120, na.rm = TRUE)+mean(proximity_clean$DistanceToAttraction_121, na.rm = TRUE ) )/10` | `r mean(proximity_clean$DistanceToFireStation_125, na.rm = TRUE)` |
+
+: Average Distance in km per Topic
 
 ## Joined Dataset
 
@@ -237,6 +247,23 @@ proximity_rent <- proximity_clean |>
   inner_join(rent_clean, by=join_by(Regions, Periods))
 ```
 
-
 ## Variable Description
 
+## Main Variable: Rent
+
+### graphical representation
+
+```{r}
+proximity_rent |> ggplot(aes(x=Periods,y=RentIncreaseIncludingHarmonisation_1, group = Regions,
+    color = Regions)) + 
+  geom_line()
+  
+```
+
+```{r}
+proximity_rent |> ggplot(aes(x=Periods,y=RentIncreaseExcludingHarmonisation_2, group = Regions,
+    color = Regions)) + 
+  geom_line()
+
+  
+```
