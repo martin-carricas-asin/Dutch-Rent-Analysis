@@ -169,20 +169,28 @@ rent <- vroom(here("data","CBS Rents.csv"),
 
 ## Period column cleaning
 
+`Periods` is stored as character in the raw data because each value carries a “JJ” suffix (e.g. “2019JJ”). Here `Periods` is converted to numeric while eliminating the "JJ" suffix behind the according year.
+
 ```{r}
-#| echo: false
-proximity_clean <- proximity |> mutate(Periods) |> separate_wider_delim(
-  Periods,
-  delim = "JJ",
-  names = c("Periods","Rest")) |> mutate(Periods = as.numeric(Periods)) |>select(!Rest)
+#| echo: true
+proximity_clean <- proximity|> 
+  separate_wider_delim(
+    Periods,
+    delim = "JJ",
+    names = c("Periods","Rest")) |> 
+  mutate(Periods = as.numeric(Periods)) |>
+  select(!Rest)
 ```
 
 ```{r}
-#| echo: false
-rent_clean <- rent |> mutate(Periods) |> separate_wider_delim(
-  Periods,
-  delim = "JJ",
-  names = c("Periods","Rest")) |> mutate(Periods = as.numeric(Periods)) |>select(!Rest)
+#| echo: true
+rent_clean <- rent |> 
+  separate_wider_delim(
+    Periods,
+    delim = "JJ",
+    names = c("Periods","Rest")) |> 
+  mutate(Periods = as.numeric(Periods)) |>
+  select(!Rest)
 ```
 
 ## Data description
@@ -201,7 +209,11 @@ The the source of the data sets is CBS Open data Statline which is the database 
 
 ### Rent Dataset
 
-The rent dataset has `r nrow(rent)` rows and `r ncol(rent)` columns
+The rent dataset has `r nrow(rent)` rows and `r ncol(rent)` columns.
+
+| Number of Regions | Time Periods | Years |
+|-------------------------|---------------------------|--------------------|
+| `r length(unique(rent_clean$Regions))` | `r length(unique(rent_clean$Periods))` | `r min(rent_clean$Periods)`- `r max(rent_clean$Periods)` |
 
 ```{r}
 #| echo: false
@@ -233,7 +245,7 @@ The proximity to facilities dataset has `r nrow(proximity)` rows and `r ncol(pro
 
 | Number of Regions | Time Periods | Years |
 |-------------------------|---------------------------|--------------------|
-| `r nrow(proximity)` | `r length(unique(proximity_clean$Periods))` | `r min(proximity_clean$Periods)`- `r max(proximity_clean$Periods)` |
+| `r length(unique(rent_clean$Regions))` | `r length(unique(proximity_clean$Periods))` | `r min(proximity_clean$Periods)`- `r max(proximity_clean$Periods)` |
 
 | Health & Wellbeing | Retail | Hospitality | Childcare | Education | Green Areas | Transport | Leisure & Culture | Fire Stations |
 |--------|--------|--------|--------|--------|--------|--------|--------|--------|
@@ -251,6 +263,21 @@ proximity_rent <- proximity_clean |>
 
 ## Variable Description
 
+| Variable | Description |
+|------------------------------------|------------------------------------|
+| rent_excl | Rent increase excluding harmonization only takes into account rents being increased by regular annual adjustments. |
+| rent_incl | Rent increase including harmonization is the regular annual rent adjustments plus the extra rise in rent for new tenants. |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+
+: Variable Description for `rent` and `proximity` dataset
+
 ## Main Variable: Rent
 
 ```{r}
@@ -262,11 +289,9 @@ common_limits <- range(
 )
 ```
 
-
 ### Graphical Representation
 
-:::: {.columns}
-
+::::: columns
 ::: {.column width="50%"}
 ### Rent increase including Harmonisation
 
@@ -292,6 +317,4 @@ proximity_rent |> ggplot(aes(x=Periods,y=RentIncreaseExcludingHarmonisation_2, g
 
 ```
 :::
-
-::::
-
+:::::
