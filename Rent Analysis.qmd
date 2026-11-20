@@ -267,14 +267,14 @@ proximity_rent <- proximity_clean |>
 |------------------------------------|------------------------------------|
 | rent_excl | Rent increase excluding harmonization only takes into account rents being increased by regular annual adjustments. |
 | rent_incl | Rent increase including harmonization is the regular annual rent adjustments plus the extra rise in rent for new tenants. |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
+| health | Average distance for all residents in an area to rhe nearest health facilities, calculated by road (in km). |
+| retail | Average distance for all resident in an area to the nearest large supermarkets, cafeterias, restaurants, calculated by road (in km). |
+| hosp | Average distance for all resident in an area to the nearest hospitality like hotels and hostels, calculated by road (in km). |
+| childcare | Average distance for all residents in an area to the nearest daycare, calculated by road (in km). |
+| educ | Average distance for all residents in an area to the nearest hospital, calculated by road (in km). |
+| green | Average distance for all residents in an area to the nearest public green area, calculated by road (in km). |
+| trans | Average distance for all residents in an area to the nearest main road, train station, festival, museums, calculated by road (in km). |
+| leisure | Average distance for all resident in an area to the nearest public library, festival, museums, calculated by road (in km). |
 
 : Variable Description for `rent` and `proximity` dataset
 
