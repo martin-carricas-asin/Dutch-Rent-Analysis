@@ -169,20 +169,28 @@ rent <- vroom(here("data","CBS Rents.csv"),
 
 ## Period column cleaning
 
+`Periods` is stored as character in the raw data because each value carries a “JJ” suffix (e.g. “2019JJ”). Here `Periods` is converted to numeric while eliminating the "JJ" suffix behind the according year.
+
 ```{r}
-#| echo: false
-proximity_clean <- proximity |> mutate(Periods) |> separate_wider_delim(
-  Periods,
-  delim = "JJ",
-  names = c("Periods","Rest")) |> mutate(Periods = as.numeric(Periods)) |>select(!Rest)
+#| echo: true
+proximity_clean <- proximity|> 
+  separate_wider_delim(
+    Periods,
+    delim = "JJ",
+    names = c("Periods","Rest")) |> 
+  mutate(Periods = as.numeric(Periods)) |>
+  select(!Rest)
 ```
 
 ```{r}
-#| echo: false
-rent_clean <- rent |> mutate(Periods) |> separate_wider_delim(
-  Periods,
-  delim = "JJ",
-  names = c("Periods","Rest")) |> mutate(Periods = as.numeric(Periods)) |>select(!Rest)
+#| echo: true
+rent_clean <- rent |> 
+  separate_wider_delim(
+    Periods,
+    delim = "JJ",
+    names = c("Periods","Rest")) |> 
+  mutate(Periods = as.numeric(Periods)) |>
+  select(!Rest)
 ```
 
 ## Data description
@@ -195,13 +203,29 @@ Github link: https://github.com/martin-carricas-asin/Dutch-Rent-Analysis
 
 - Rent increase data: https://opendata.cbs.nl/portal.html?\_la=en&\_catalog=CBS&tableId=83162ENG&\_theme=1175
 
-The the source of the data sets is CBS Open data Statline which is the database of the Statistics Netherlands. This is an independent government institution responsible for gathering and publishing various official statistics about the Netherlands.
+The the source of the datasets is CBS Open data Statline, the database of the Statistics Netherlands. This is an independent government institution responsible for gathering and publishing various official statistics about the Netherlands.
+
+The dataset on rent increase per region covers the period from 2015 to 2026 and describes the average rent increase accross the country, regions and provinces, both including harmonisation and excluding harmonisation. It includes the rent increase of regulated, mid-tier and liberalised dwellings. Rent increase is defined as the average change in rental prices over a year, with the maximum permitted rent increase determined by the dutch government. Rent harmonisation allows the rent to be increased higher than the maximum rent increase valid for that year when there is a change in tenancy. This is meant to allow the property to be rented at its current rental value. The new rent is still limited by the maximum rent based on the Ministry of Interior and Kingdom Relations' Rent Point System. This regulation targets situations in which, following a longterm lease, the previous rent is lower than the property's current rental value due to the limit on rent increases during the previous tenancy. The regions are identified by region codes and stored as characters, whereas the other variables are stored as doubles. The dataset contains no missing values. 
+
+The dataset on proximity to facilities per region records the average distance for residents from their homes to different types of facilities over the period from 2006 to 2025. In addition to the distance variables, the data set also contains variables recording the number of facilities within a given radius. They are calculated as an average over all persons in an area. The data is given  at the national, regional, provincial and municipal level.
+
+All distances are calculated based on the shortest driving distance (by car). Variables describing the distance to a facility are given in kilometre and stored as a double data type. The variables indicating the number of facilities within a given radius is recorded as an average number and also stored as a double. The region codes are the same as in the rent dataset and also stored as characters.
+Depending on the variable there are many missing values or none at all. For example the distance to youth health care centre variable shows 95% NA, the variable Distance to School 56 (Distance to primary schools) shows no missing values at all. These differences in missing values were caused by changes in the recorded values per year. Data on youth health care centers were only recorded in the first year (2006) while others have been continuously added to until now. 
+
+
+
+
+
 
 ## Individual Dataset Descriptives
 
 ### Rent Dataset
 
-The rent dataset has `r nrow(rent)` rows and `r ncol(rent)` columns
+The rent dataset has `r nrow(rent)` rows and `r ncol(rent)` columns.
+
+| Number of Regions | Time Periods | Years |
+|-------------------------|---------------------------|--------------------|
+| `r length(unique(rent_clean$Regions))` | `r length(unique(rent_clean$Periods))` | `r min(rent_clean$Periods)`- `r max(rent_clean$Periods)` |
 
 ```{r}
 #| echo: false
@@ -233,7 +257,7 @@ The proximity to facilities dataset has `r nrow(proximity)` rows and `r ncol(pro
 
 | Number of Regions | Time Periods | Years |
 |-------------------------|---------------------------|--------------------|
-| `r nrow(proximity)` | `r length(unique(proximity_clean$Periods))` | `r min(proximity_clean$Periods)`- `r max(proximity_clean$Periods)` |
+| `r length(unique(rent_clean$Regions))` | `r length(unique(proximity_clean$Periods))` | `r min(proximity_clean$Periods)`- `r max(proximity_clean$Periods)` |
 
 | Health & Wellbeing | Retail | Hospitality | Childcare | Education | Green Areas | Transport | Leisure & Culture | Fire Stations |
 |--------|--------|--------|--------|--------|--------|--------|--------|--------|
@@ -251,6 +275,21 @@ proximity_rent <- proximity_clean |>
 
 ## Variable Description
 
+| Variable | Description |
+|------------------------------------|------------------------------------|
+| rent_excl | Rent increase excluding harmonization only takes into account rents being increased by regular annual adjustments. |
+| rent_incl | Rent increase including harmonization is the regular annual rent adjustments plus the extra rise in rent for new tenants. |
+| health | Average distance for all residents in an area to rhe nearest health facilities, calculated by road (in km). |
+| retail | Average distance for all resident in an area to the nearest large supermarkets, cafeterias, restaurants, calculated by road (in km). |
+| hosp | Average distance for all resident in an area to the nearest hospitality like hotels and hostels, calculated by road (in km). |
+| childcare | Average distance for all residents in an area to the nearest daycare, calculated by road (in km). |
+| educ | Average distance for all residents in an area to the nearest hospital, calculated by road (in km). |
+| green | Average distance for all residents in an area to the nearest public green area, calculated by road (in km). |
+| trans | Average distance for all residents in an area to the nearest main road, train station, festival, museums, calculated by road (in km). |
+| leisure | Average distance for all resident in an area to the nearest public library, festival, museums, calculated by road (in km). |
+
+: Variable Description for `rent` and `proximity` dataset
+
 ## Main Variable: Rent
 
 ```{r}
@@ -266,16 +305,18 @@ common_limits <- range(
 
 ### Graphical Representation
 
-:::: {.columns}
+Subset of Regions: NL01 - country, LD01 - North, LD02 - East, LD03 - West, LD04 - South
 
+::::: columns
 ::: {.column width="50%"}
 ### Rent increase including Harmonisation
 
 ```{r}
 #| echo: false
-proximity_rent |> 
+proximity_rent |>  
+  filter(Regions %in% c("NL01", "LD01", "LD02","LD03","LD04")) |>
   ggplot(aes(x=Periods,y=RentIncreaseIncludingHarmonisation_1, group = Regions,
-    color = Regions)) + 
+             color = Regions)) + 
   geom_line() +
   scale_y_continuous(limits = common_limits)
   
@@ -287,13 +328,14 @@ proximity_rent |>
 
 ```{r}
 #| echo: false
-proximity_rent |> ggplot(aes(x=Periods,y=RentIncreaseExcludingHarmonisation_2, group = Regions,
+proximity_rent |> 
+  filter(Regions %in% c("NL01", "LD01", "LD02","LD03","LD04")) |>
+  ggplot(aes(x=Periods,y=RentIncreaseExcludingHarmonisation_2, group = Regions,
     color = Regions)) + 
   geom_line() +
   scale_y_continuous(limits = common_limits)
 
 ```
 :::
-
-::::
+:::::
 
