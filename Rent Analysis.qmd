@@ -263,6 +263,7 @@ common_limits <- range(
 ```
 
 
+
 ### Graphical Representation
 
 :::: {.columns}
@@ -272,7 +273,8 @@ common_limits <- range(
 
 ```{r}
 #| echo: false
-proximity_rent |> ggplot(aes(x=Periods,y=RentIncreaseIncludingHarmonisation_1, group = Regions,
+proximity_rent |> 
+  ggplot(aes(x=Periods,y=RentIncreaseIncludingHarmonisation_1, group = Regions,
     color = Regions)) + 
   geom_line() +
   scale_y_continuous(limits = common_limits)
