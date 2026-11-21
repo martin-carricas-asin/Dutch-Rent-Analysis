@@ -315,7 +315,9 @@ proximity_rent <- proximity_rent|>
       DistanceToPopMusicVenue_114, DistanceToSauna_119,
       DistanceToTanningSalon_120, DistanceToAttraction_121
     )), na.rm = TRUE)
-  )
+  ) |>
+  rename(rent_incl=RentIncreaseIncludingHarmonisation_1,
+         rent_excl = RentIncreaseExcludingHarmonisation_2)
 ```
 
 
@@ -355,7 +357,7 @@ Subset of Regions: NL01 - country, LD01 - North, LD02 - East, LD03 - West, LD04 
 
 ::::: columns
 ::: {.column width="50%"}
-### Rent increase including Harmonisation
+### Rent increase including Harmonization
 
 ```{r}
 #| echo: false
