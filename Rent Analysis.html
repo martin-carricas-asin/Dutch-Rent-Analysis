@@ -24,6 +24,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -37,7 +72,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="Rent Analysis_files/libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="Rent Analysis_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="Rent Analysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="Rent Analysis_files/libs/bootstrap/bootstrap-293eb07ceb3ef7671a4ab4ab66eb6066.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="Rent Analysis_files/libs/bootstrap/bootstrap-efbb37e9afcc02144ebbc7afd12a776f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -73,16 +108,275 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="period-column-cleaning" class="level2">
+<h2 class="anchored" data-anchor-id="period-column-cleaning">Period column cleaning</h2>
+<p><code>Periods</code> is stored as character in the raw data because each value carries a “JJ” suffix (e.g.&nbsp;“2019JJ”). Here <code>Periods</code> is converted to numeric while eliminating the “JJ” suffix behind the according year.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>proximity_clean <span class="ot">&lt;-</span> proximity<span class="sc">|&gt;</span> </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate_wider_delim</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    Periods,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">delim =</span> <span class="st">"JJ"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names =</span> <span class="fu">c</span>(<span class="st">"Periods"</span>,<span class="st">"Rest"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Periods =</span> <span class="fu">as.numeric</span>(Periods)) <span class="sc">|&gt;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">!</span>Rest)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>rent_clean <span class="ot">&lt;-</span> rent <span class="sc">|&gt;</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate_wider_delim</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    Periods,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">delim =</span> <span class="st">"JJ"</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names =</span> <span class="fu">c</span>(<span class="st">"Periods"</span>,<span class="st">"Rest"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Periods =</span> <span class="fu">as.numeric</span>(Periods)) <span class="sc">|&gt;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">!</span>Rest)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
 <section id="data-description" class="level2">
 <h2 class="anchored" data-anchor-id="data-description">Data description</h2>
 <p>Github link: https://github.com/martin-carricas-asin/Dutch-Rent-Analysis</p>
-<p>Data sources:</p>
+<p><em>Data sources:</em></p>
 <ul>
-<li><p>proximity to facilities, regional data: https://opendata.cbs.nl/portal.html?_la=en&amp;_catalog=CBS&amp;tableId=80305ENG&amp;_theme=1187</p></li>
+<li><p>Proximity to facilities, regional data: https://opendata.cbs.nl/portal.html?_la=en&amp;_catalog=CBS&amp;tableId=80305ENG&amp;_theme=1187</p></li>
 <li><p>Rent increase data: https://opendata.cbs.nl/portal.html?_la=en&amp;_catalog=CBS&amp;tableId=83162ENG&amp;_theme=1175</p></li>
 </ul>
-<p>The the source of the data sets is CBS Open data Statline which is the database of the Statistics Netherlands. This is an independent government institution responsible for gathering and publishing various official statistics about the Netherlands. The land use data set is based on a land use file which documents area statistics for different regions in the netherlands.This land use file provides data only for a subset of years, for all other years only total surface area is given. Due to the methodology behind the land use file being updated, no new data has been reported since 2017. Any corrections that were found in the land use file for data on previous years were not transfered to this data set.</p>
-<p>The proximity to facilities dataset has 340 rows and 128 columns. The rent dataset has 252 rows and 5 columns</p>
+<p>The the source of the datasets is CBS Open data Statline, the database of the Statistics Netherlands. This is an independent government institution responsible for gathering and publishing various official statistics about the Netherlands.</p>
+<p>The dataset on rent increase per region covers the period from 2015 to 2026 and describes the average rent increase accross the country, regions and provinces, both including harmonisation and excluding harmonisation. It includes the rent increase of regulated, mid-tier and liberalised dwellings. Rent increase is defined as the average change in rental prices over a year, with the maximum permitted rent increase determined by the dutch government. Rent harmonisation allows the rent to be increased higher than the maximum rent increase valid for that year when there is a change in tenancy. This is meant to allow the property to be rented at its current rental value. The new rent is still limited by the maximum rent based on the Ministry of Interior and Kingdom Relations’ Rent Point System. This regulation targets situations in which, following a longterm lease, the previous rent is lower than the property’s current rental value due to the limit on rent increases during the previous tenancy. The regions are identified by region codes and stored as characters, whereas the other variables are stored as doubles. The dataset contains no missing values.</p>
+<p>The dataset on proximity to facilities per region records the average distance for residents from their homes to different types of facilities over the period from 2006 to 2025. In addition to the distance variables, the data set also contains variables recording the number of facilities within a given radius. They are calculated as an average over all persons in an area. The data is given at the national, regional, provincial and municipal level.</p>
+<p>All distances are calculated based on the shortest driving distance (by car). Variables describing the distance to a facility are given in kilometre and stored as a double data type. The variables indicating the number of facilities within a given radius is recorded as an average number and also stored as a double. The region codes are the same as in the rent dataset and also stored as characters. Depending on the variable there are many missing values or none at all. For example the distance to youth health care centre variable shows 95% NA, the variable Distance to School 56 (Distance to primary schools) shows no missing values at all. These differences in missing values were caused by changes in the recorded values per year. Data on youth health care centers were only recorded in the first year (2006) while others have been continuously added to until now.</p>
+</section>
+<section id="individual-dataset-descriptives" class="level2">
+<h2 class="anchored" data-anchor-id="individual-dataset-descriptives">Individual Dataset Descriptives</h2>
+<section id="rent-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="rent-dataset">Rent Dataset</h3>
+<p>The rent dataset has 252 rows and 5 columns.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 37%">
+<col style="width: 27%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Number of Regions</th>
+<th>Time Periods</th>
+<th>Years</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>21</td>
+<td>12</td>
+<td>2015- 2026</td>
+</tr>
+</tbody>
+</table>
+<div class="cell">
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">statistic</th>
+<th style="text-align: right;">rent_incl</th>
+<th style="text-align: right;">rent_excl</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">mean</td>
+<td style="text-align: right;">2.77</td>
+<td style="text-align: right;">2.24</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sd</td>
+<td style="text-align: right;">1.39</td>
+<td style="text-align: right;">1.29</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">min</td>
+<td style="text-align: right;">0.30</td>
+<td style="text-align: right;">-0.10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">max</td>
+<td style="text-align: right;">5.60</td>
+<td style="text-align: right;">4.90</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="proximity-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="proximity-dataset">Proximity Dataset</h3>
+<p>The proximity to facilities dataset has 340 rows and 128 columns.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 37%">
+<col style="width: 27%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Number of Regions</th>
+<th>Time Periods</th>
+<th>Years</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>21</td>
+<td>20</td>
+<td>2006- 2025</td>
+</tr>
+</tbody>
+</table>
+<table class="caption-top table">
+<caption>Average Distance in km per Topic</caption>
+<colgroup>
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Health &amp; Wellbeing</th>
+<th>Retail</th>
+<th>Hospitality</th>
+<th>Childcare</th>
+<th>Education</th>
+<th>Green Areas</th>
+<th>Transport</th>
+<th>Leisure &amp; Culture</th>
+<th>Fire Stations</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>3.638375</td>
+<td>1.6896514</td>
+<td>1.4893791</td>
+<td>0.9433007</td>
+<td>2.5747059</td>
+<td>1.4584967</td>
+<td>3.8751625</td>
+<td>8.3327263</td>
+<td>2.2721569</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="joined-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="joined-dataset">Joined Dataset</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>proximity_rent <span class="ot">&lt;-</span> proximity_clean <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(rent_clean, <span class="at">by=</span><span class="fu">join_by</span>(Regions, Periods))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="computing-means-of-variable-groups" class="level3">
+<h3 class="anchored" data-anchor-id="computing-means-of-variable-groups">Computing means of variable groups</h3>
+<p>Measured variables and Region Codes will be renamed in the joined dataset for better documentation in the following analysis</p>
+</section>
+</section>
+<section id="variable-description" class="level2">
+<h2 class="anchored" data-anchor-id="variable-description">Variable Description</h2>
+<table class="caption-top table">
+<caption>Variable Description for <code>rent</code> and <code>proximity</code> dataset</caption>
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>rent_excl</td>
+<td>Rent increase excluding harmonization only takes into account rents being increased by regular annual adjustments.</td>
+</tr>
+<tr class="even">
+<td>rent_incl</td>
+<td>Rent increase including harmonization is the regular annual rent adjustments plus the extra rise in rent for new tenants.</td>
+</tr>
+<tr class="odd">
+<td>health</td>
+<td>Average distance for all residents in an area to rhe nearest health facilities, calculated by road (in km).</td>
+</tr>
+<tr class="even">
+<td>retail</td>
+<td>Average distance for all residents in an area to the nearest large supermarket and daily food and department stores, calculated by road (in km).</td>
+</tr>
+<tr class="odd">
+<td>hosp</td>
+<td>Average distance for all resident in an area to the nearest hospitality like hotels/hostels, cafeterias, restaurants, calculated by road (in km).</td>
+</tr>
+<tr class="even">
+<td>childcare</td>
+<td>Average distance for all residents in an area to the nearest daycare, calculated by road (in km).</td>
+</tr>
+<tr class="odd">
+<td>educ</td>
+<td>Average distance for all residents in an area to the nearest school, calculated by road (in km).</td>
+</tr>
+<tr class="even">
+<td>green</td>
+<td>Average distance for all residents in an area to the nearest public green area and inland waters, calculated by road (in km).</td>
+</tr>
+<tr class="odd">
+<td>trans</td>
+<td>Average distance for all residents in an area to the nearest main road, train station, calculated by road (in km).</td>
+</tr>
+<tr class="even">
+<td>leisure</td>
+<td>Average distance for all resident in an area to the nearest public library, festival, museums, etc., calculated by road (in km).</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="main-variable-rent" class="level2">
+<h2 class="anchored" data-anchor-id="main-variable-rent">Main Variable: Rent</h2>
+<section id="graphical-representation" class="level3">
+<h3 class="anchored" data-anchor-id="graphical-representation">Graphical Representation</h3>
+<p>Subset of Regions: NL01 - country, LD01 - North, LD02 - East, LD03 - West, LD04 - South</p>
+</section>
+<div class="columns">
+<div class="column" style="width:50%;">
+<section id="rent-increase-including-harmonisation" class="level3">
+<h3 class="anchored" data-anchor-id="rent-increase-including-harmonisation">Rent increase including Harmonisation</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Rent-Analysis_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</div><div class="column" style="width:50%;">
+<section id="rent-increase-excluding-harmonisation" class="level3">
+<h3 class="anchored" data-anchor-id="rent-increase-excluding-harmonisation">Rent increase excluding Harmonisation</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Rent-Analysis_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
 </section>
 
 </main>
