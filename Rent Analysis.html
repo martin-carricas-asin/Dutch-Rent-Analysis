@@ -279,9 +279,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>proximity_rent <span class="ot">&lt;-</span> proximity_clean <span class="sc">|&gt;</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(rent_clean, <span class="at">by=</span><span class="fu">join_by</span>(Regions, Periods))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<section id="computing-means-of-variable-groups" class="level3">
-<h3 class="anchored" data-anchor-id="computing-means-of-variable-groups">Computing means of variable groups</h3>
+<section id="computing-means-of-variable-groups-and-renaming-variables" class="level3">
+<h3 class="anchored" data-anchor-id="computing-means-of-variable-groups-and-renaming-variables">Computing means of variable groups and renaming variables</h3>
 <p>Measured variables and Region Codes will be renamed in the joined dataset for better documentation in the following analysis</p>
+</section>
+<section id="region-names" class="level3">
+<h3 class="anchored" data-anchor-id="region-names">Region names</h3>
+<p>Changing region codes to names for better readability in the following analysis.</p>
 </section>
 </section>
 <section id="variable-description" class="level2">
@@ -350,13 +354,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <div class="columns">
 <div class="column" style="width:50%;">
-<section id="rent-increase-including-harmonisation" class="level3">
-<h3 class="anchored" data-anchor-id="rent-increase-including-harmonisation">Rent increase including Harmonisation</h3>
+<section id="rent-increase-including-harmonization" class="level3">
+<h3 class="anchored" data-anchor-id="rent-increase-including-harmonization">Rent increase including Harmonization</h3>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Rent-Analysis_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Rent-Analysis_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -369,7 +373,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Rent-Analysis_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Rent-Analysis_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

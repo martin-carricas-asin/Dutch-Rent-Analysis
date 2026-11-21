@@ -274,7 +274,7 @@ proximity_rent <- proximity_clean |>
   inner_join(rent_clean, by=join_by(Regions, Periods))
 ```
 
-### Computing means of variable groups
+### Computing means of variable groups and renaming variables
 Measured variables and Region Codes will be renamed in the joined dataset for better documentation in the following analysis
 
 ```{r}
@@ -320,6 +320,12 @@ proximity_rent <- proximity_rent|>
          rent_excl = RentIncreaseExcludingHarmonisation_2)
 ```
 
+### Region names
+Changing region codes to names for better readability in the following analysis.
+```{r}
+
+```
+
 
 ## Variable Description
 
@@ -343,8 +349,8 @@ proximity_rent <- proximity_rent|>
 ```{r}
 #| echo: false
 common_limits <- range(
-  c(proximity_rent$RentIncreaseIncludingHarmonisation_1,
-    proximity_rent$RentIncreaseExcludingHarmonisation_2),
+  c(proximity_rent$rent_incl,
+    proximity_rent$rent_excl),
   na.rm = TRUE
 )
 ```
@@ -363,7 +369,7 @@ Subset of Regions: NL01 - country, LD01 - North, LD02 - East, LD03 - West, LD04 
 #| echo: false
 proximity_rent |>  
   filter(Regions %in% c("NL01", "LD01", "LD02","LD03","LD04")) |>
-  ggplot(aes(x=Periods,y=RentIncreaseIncludingHarmonisation_1, group = Regions,
+  ggplot(aes(x=Periods,y=rent_incl, group = Regions,
              color = Regions)) + 
   geom_line() +
   scale_y_continuous(limits = common_limits)
@@ -378,7 +384,7 @@ proximity_rent |>
 #| echo: false
 proximity_rent |> 
   filter(Regions %in% c("NL01", "LD01", "LD02","LD03","LD04")) |>
-  ggplot(aes(x=Periods,y=RentIncreaseExcludingHarmonisation_2, group = Regions,
+  ggplot(aes(x=Periods,y=rent_excl, group = Regions,
     color = Regions)) + 
   geom_line() +
   scale_y_continuous(limits = common_limits)
