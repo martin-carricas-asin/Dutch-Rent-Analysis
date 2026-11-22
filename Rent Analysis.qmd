@@ -4,6 +4,7 @@ format: html
 editor: source
 author: "Kim Gronewald & Martin Carricas Asin"
 df-print: kable
+embed-resources: true #keeps html self-contained
 ---
 
 ```{r}
