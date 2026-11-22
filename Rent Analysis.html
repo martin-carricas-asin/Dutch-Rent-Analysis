@@ -108,8 +108,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="period-column-cleaning" class="level2">
-<h2 class="anchored" data-anchor-id="period-column-cleaning">Period column cleaning</h2>
+<section id="research-question" class="level2">
+<h2 class="anchored" data-anchor-id="research-question">Research question</h2>
+<p>Housing has become a severe problem in many countries. Young people who have not yet been able to buy a home depend on renting, and the shortage of housing is hurting them badly. At its core, this is a simple supply-demand problem: high demand and not enough supply. Yet a simple supply-demand mechanism is not the only explanation for rent prices. If they could, every home would cost the same to rent, which is clearly not the case. Location matters. The quality of life in an area depends on how close residents are to certain infrastructure, and living in a remote town is usually cheaper than living in a central city.</p>
+<p>This raises two questions: which infrastructure drives housing costs, and do some types matter more than others? We use the Netherlands as a case study. This project analyses rent increases in 10 years time (2015-2025) relate to the distance to different types of infrastructure across 12 Dutch regions.</p>
+</section>
+<section id="data-description" class="level2">
+<h2 class="anchored" data-anchor-id="data-description">Data description</h2>
+<p>The source of the datasets is <a href="https://opendata.cbs.nl/portal.html?_la=en&amp;_catalog=CBS">CBS Open data Statline</a>, the database of the Statistics Netherlands. This is an independent government institution that is responsible for gathering and publishing various official statistics about the Netherlands.</p>
+<p>The dataset on rent increase per region covers the periods from 2015 to 2026 and describes the average rent increase across the country, regions and provinces, both including and excluding harmonization. It includes the rent increase of regulated, mid-tier and liberalised dwellings. The rent increase is defined as the average change in rental prices over a year, with the maximum permitted rent increase determined by the dutch government.</p>
+<p>The rent harmonization allows the rent to be increased higher than the maximum rent increase valid for that year when there is a change in tenancy. This is meant to allow the property to be rented at its current rental value. The new rent is still limited by the maximum rent based on the Ministry of Interior and Kingdom Relations’ Rent Point System. This regulation targets situations in which, following a longterm lease, the previous rent is lower than the property’s current rental value due to the limit on rent increases during the previous tenancy. The regions are identified by region codes and stored as characters, whereas the other variables are stored as doubles. The dataset contains no missing values.</p>
+<p>The dataset on proximity to facilities per region records the average distance for residents from their homes to different types of facilities over the period from 2006 to 2025. In addition to the distance variables, the data set also contains variables recording the number of facilities within a given radius. They are calculated as an average over all persons in an area. The data is given at the national, regional, provincial and municipal level.</p>
+<p>All distances are calculated based on the shortest driving distance (by car). Variables describing the distance to a facility are given in kilometre and stored as a double data type. The variables indicating the number of facilities within a given radius is recorded as an average number and also stored as a double. The region codes are the same as in the rent dataset and also stored as characters. Depending on the variable there are many missing values or none at all. For example the distance to youth health care centre variable shows 95% NA, the variable Distance to School 56 (Distance to primary schools) shows no missing values at all. These differences in missing values were caused by changes in the recorded values per year. Data on youth health care centers were only recorded in the first year (2006) while others have been continuously added to until now.</p>
+<p><strong>Data sources:</strong></p>
+<ul>
+<li><p><a href="https://opendata.cbs.nl/portal.html?_la=en&amp;_catalog=CBS&amp;tableId=80305ENG&amp;_theme=1187">Proximity to facilities, regional data</a></p></li>
+<li><p><a href="https://opendata.cbs.nl/portal.html?_la=en&amp;_catalog=CBS&amp;tableId=83162ENG&amp;_theme=1175">Rent increase data</a></p></li>
+</ul>
+<p><a href="https://github.com/martin-carricas-asin/Dutch-Rent-Analysis">Github repository</a></p>
+</section>
+<section id="dataset-cleaning" class="level2">
+<h2 class="anchored" data-anchor-id="dataset-cleaning">Dataset cleaning</h2>
 <p><code>Periods</code> is stored as character in the raw data because each value carries a “JJ” suffix (e.g.&nbsp;“2019JJ”). Here <code>Periods</code> is converted to numeric while eliminating the “JJ” suffix behind the according year.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>proximity_clean <span class="ot">&lt;-</span> proximity<span class="sc">|&gt;</span> </span>
@@ -129,19 +148,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Periods =</span> <span class="fu">as.numeric</span>(Periods)) <span class="sc">|&gt;</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">!</span>Rest)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</section>
-<section id="data-description" class="level2">
-<h2 class="anchored" data-anchor-id="data-description">Data description</h2>
-<p>Github link: https://github.com/martin-carricas-asin/Dutch-Rent-Analysis</p>
-<p><em>Data sources:</em></p>
-<ul>
-<li><p>Proximity to facilities, regional data: https://opendata.cbs.nl/portal.html?_la=en&amp;_catalog=CBS&amp;tableId=80305ENG&amp;_theme=1187</p></li>
-<li><p>Rent increase data: https://opendata.cbs.nl/portal.html?_la=en&amp;_catalog=CBS&amp;tableId=83162ENG&amp;_theme=1175</p></li>
-</ul>
-<p>The the source of the datasets is CBS Open data Statline, the database of the Statistics Netherlands. This is an independent government institution responsible for gathering and publishing various official statistics about the Netherlands.</p>
-<p>The dataset on rent increase per region covers the period from 2015 to 2026 and describes the average rent increase accross the country, regions and provinces, both including harmonisation and excluding harmonisation. It includes the rent increase of regulated, mid-tier and liberalised dwellings. Rent increase is defined as the average change in rental prices over a year, with the maximum permitted rent increase determined by the dutch government. Rent harmonisation allows the rent to be increased higher than the maximum rent increase valid for that year when there is a change in tenancy. This is meant to allow the property to be rented at its current rental value. The new rent is still limited by the maximum rent based on the Ministry of Interior and Kingdom Relations’ Rent Point System. This regulation targets situations in which, following a longterm lease, the previous rent is lower than the property’s current rental value due to the limit on rent increases during the previous tenancy. The regions are identified by region codes and stored as characters, whereas the other variables are stored as doubles. The dataset contains no missing values.</p>
-<p>The dataset on proximity to facilities per region records the average distance for residents from their homes to different types of facilities over the period from 2006 to 2025. In addition to the distance variables, the data set also contains variables recording the number of facilities within a given radius. They are calculated as an average over all persons in an area. The data is given at the national, regional, provincial and municipal level.</p>
-<p>All distances are calculated based on the shortest driving distance (by car). Variables describing the distance to a facility are given in kilometre and stored as a double data type. The variables indicating the number of facilities within a given radius is recorded as an average number and also stored as a double. The region codes are the same as in the rent dataset and also stored as characters. Depending on the variable there are many missing values or none at all. For example the distance to youth health care centre variable shows 95% NA, the variable Distance to School 56 (Distance to primary schools) shows no missing values at all. These differences in missing values were caused by changes in the recorded values per year. Data on youth health care centers were only recorded in the first year (2006) while others have been continuously added to until now.</p>
 </section>
 <section id="individual-dataset-descriptives" class="level2">
 <h2 class="anchored" data-anchor-id="individual-dataset-descriptives">Individual Dataset Descriptives</h2>
@@ -280,6 +286,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(rent_clean, <span class="at">by=</span><span class="fu">join_by</span>(Regions, Periods))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The two datasets are joined using <code>inner_join()</code>, and joined by <code>Regions</code> and <code>Periods</code>. Since for each region in the proximity dataset there are multiple periods of observations, both variables are necessary to identify the matching observation of the same region and period in the rent dataset.</p>
+<section id="computing-means-of-variable-groups-and-renaming" class="level3">
+<h3 class="anchored" data-anchor-id="computing-means-of-variable-groups-and-renaming">Computing means of variable groups and renaming</h3>
+<p>Measured variables and Region Codes will be renamed in the joined dataset for better documentation in the following analysis</p>
+</section>
+<section id="renaming-regions" class="level3">
+<h3 class="anchored" data-anchor-id="renaming-regions">Renaming regions</h3>
+<p>Changing region codes to names for better readability in the following analysis.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>region_labels <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Regions =</span> <span class="fu">c</span>(<span class="st">"N01"</span>,<span class="st">"LD01"</span>, <span class="st">"LD02"</span>,<span class="st">"LD03"</span>,<span class="st">"LD04"</span>),</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Region_name =</span> <span class="fu">c</span>(<span class="st">"Total country"</span>, <span class="st">"North"</span>, <span class="st">"East"</span>, <span class="st">"West"</span>,<span class="st">"South"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>proximity_rent <span class="ot">&lt;-</span> proximity_rent <span class="sc">|&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(region_labels, <span class="fu">join_by</span>(Regions))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
 </section>
 <section id="variable-description" class="level2">
 <h2 class="anchored" data-anchor-id="variable-description">Variable Description</h2>
@@ -310,11 +332,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="even">
 <td>retail</td>
-<td>Average distance for all resident in an area to the nearest large supermarkets, cafeterias, restaurants, calculated by road (in km).</td>
+<td>Average distance for all residents in an area to the nearest large supermarket and daily food and department stores, calculated by road (in km).</td>
 </tr>
 <tr class="odd">
 <td>hosp</td>
-<td>Average distance for all resident in an area to the nearest hospitality like hotels and hostels, calculated by road (in km).</td>
+<td>Average distance for all resident in an area to the nearest hospitality like hotels/hostels, cafeterias, restaurants, calculated by road (in km).</td>
 </tr>
 <tr class="even">
 <td>childcare</td>
@@ -322,54 +344,53 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="odd">
 <td>educ</td>
-<td>Average distance for all residents in an area to the nearest hospital, calculated by road (in km).</td>
+<td>Average distance for all residents in an area to the nearest school, calculated by road (in km).</td>
 </tr>
 <tr class="even">
 <td>green</td>
-<td>Average distance for all residents in an area to the nearest public green area, calculated by road (in km).</td>
+<td>Average distance for all residents in an area to the nearest public green area and inland waters, calculated by road (in km).</td>
 </tr>
 <tr class="odd">
 <td>trans</td>
-<td>Average distance for all residents in an area to the nearest main road, train station, festival, museums, calculated by road (in km).</td>
+<td>Average distance for all residents in an area to the nearest main road, train station, calculated by road (in km).</td>
 </tr>
 <tr class="even">
 <td>leisure</td>
-<td>Average distance for all resident in an area to the nearest public library, festival, museums, calculated by road (in km).</td>
+<td>Average distance for all resident in an area to the nearest public library, festival, museums, etc., calculated by road (in km).</td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="research-question" class="level2">
-<h2 class="anchored" data-anchor-id="research-question">Research Question</h2>
+<section id="research-question-1" class="level2">
+<h2 class="anchored" data-anchor-id="research-question-1">Research Question</h2>
 </section>
 <section id="main-variable-rent" class="level2">
 <h2 class="anchored" data-anchor-id="main-variable-rent">Main Variable: Rent</h2>
 <section id="graphical-representation" class="level3">
 <h3 class="anchored" data-anchor-id="graphical-representation">Graphical Representation</h3>
 <p>Subset of Regions: NL01 - country, LD01 - North, LD02 - East, LD03 - West, LD04 - South</p>
-</section>
 <div class="columns">
 <div class="column" style="width:50%;">
-<section id="rent-increase-including-harmonisation" class="level3">
-<h3 class="anchored" data-anchor-id="rent-increase-including-harmonisation">Rent increase including Harmonisation</h3>
+<section id="rent-increase-incl.-harmonization" class="level4">
+<h4 class="anchored" data-anchor-id="rent-increase-incl.-harmonization">Rent increase incl.&nbsp;Harmonization</h4>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Rent-Analysis_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Rent-Analysis_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
 </div><div class="column" style="width:50%;">
-<section id="rent-increase-excluding-harmonisation" class="level3">
-<h3 class="anchored" data-anchor-id="rent-increase-excluding-harmonisation">Rent increase excluding Harmonisation</h3>
+<section id="rent-increase-excl.-harmonization" class="level4">
+<h4 class="anchored" data-anchor-id="rent-increase-excl.-harmonization">Rent increase excl. Harmonization</h4>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Rent-Analysis_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Rent-Analysis_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -377,6 +398,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 </div>
 </div>
+</section>
 </section>
 
 </main>

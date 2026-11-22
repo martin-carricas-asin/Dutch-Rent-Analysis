@@ -23,8 +23,9 @@ library(here)
 #| echo: false
 #| message: false
 
-proximity <- vroom(here("data","CBS Proximity.csv"), 
-                        col_types = cols(
+proximity <- vroom(here("data","CBS Proximity.csv"),
+                   na = c("", "."), # reads every point or blank cell as "NA"
+                    col_types = cols(
   ID = col_integer(),
   Regions = col_character(),
   Periods = col_character(),
@@ -167,7 +168,34 @@ rent <- vroom(here("data","CBS Rents.csv"),
 ))
 ```
 
-## Period column cleaning
+## Research question
+
+Housing has become a severe problem in many countries. Young people who have not yet been able to buy a home depend on renting, and the shortage of housing is hurting them badly. At its core, this is a simple supply-demand problem: high demand and not enough supply. Yet a simple supply-demand mechanism is not the only explanation for rent prices. If they could, every home would cost the same to rent, which is clearly not the case. Location matters. The quality of life in an area depends on how close residents are to certain infrastructure, and living in a remote town is usually cheaper than living in a central city.
+
+This raises two questions: which infrastructure drives housing costs, and do some types matter more than others? We use the Netherlands as a case study. This project analyses rent increases in 10 years time (2015-2025) relate to the distance to different types of infrastructure across 12 Dutch regions.
+
+## Data description
+
+The source of the datasets is [CBS Open data Statline](https://opendata.cbs.nl/portal.html?_la=en&_catalog=CBS), the database of the Statistics Netherlands. This is an independent government institution that is responsible for gathering and publishing various official statistics about the Netherlands.
+
+The dataset on rent increase per region covers the periods from 2015 to 2026 and describes the average rent increase across the country, regions and provinces, both including and excluding harmonization. It includes the rent increase of regulated, mid-tier and liberalised dwellings. The rent increase is defined as the average change in rental prices over a year, with the maximum permitted rent increase determined by the dutch government. 
+
+The rent harmonization allows the rent to be increased higher than the maximum rent increase valid for that year when there is a change in tenancy. This is meant to allow the property to be rented at its current rental value. The new rent is still limited by the maximum rent based on the Ministry of Interior and Kingdom Relations' Rent Point System. This regulation targets situations in which, following a longterm lease, the previous rent is lower than the property's current rental value due to the limit on rent increases during the previous tenancy. The regions are identified by region codes and stored as characters, whereas the other variables are stored as doubles. The dataset contains no missing values. 
+
+The dataset on proximity to facilities per region records the average distance for residents from their homes to different types of facilities over the period from 2006 to 2025. In addition to the distance variables, the data set also contains variables recording the number of facilities within a given radius. They are calculated as an average over all persons in an area. The data is given  at the national, regional, provincial and municipal level.
+
+All distances are calculated based on the shortest driving distance (by car). Variables describing the distance to a facility are given in kilometre and stored as a double data type. The variables indicating the number of facilities within a given radius is recorded as an average number and also stored as a double. The region codes are the same as in the rent dataset and also stored as characters.
+Depending on the variable there are many missing values or none at all. For example the distance to youth health care centre variable shows 95% NA, the variable Distance to School 56 (Distance to primary schools) shows no missing values at all. These differences in missing values were caused by changes in the recorded values per year. Data on youth health care centers were only recorded in the first year (2006) while others have been continuously added to until now. 
+
+**Data sources:**
+
+- [Proximity to facilities, regional data](https://opendata.cbs.nl/portal.html?\_la=en&\_catalog=CBS&tableId=80305ENG&\_theme=1187)
+
+- [Rent increase data](https://opendata.cbs.nl/portal.html?\_la=en&\_catalog=CBS&tableId=83162ENG&\_theme=1175)
+
+[Github repository](https://github.com/martin-carricas-asin/Dutch-Rent-Analysis)
+
+## Dataset cleaning
 
 `Periods` is stored as character in the raw data because each value carries a “JJ” suffix (e.g. “2019JJ”). Here `Periods` is converted to numeric while eliminating the "JJ" suffix behind the according year.
 
@@ -192,30 +220,6 @@ rent_clean <- rent |>
   mutate(Periods = as.numeric(Periods)) |>
   select(!Rest)
 ```
-
-## Data description
-
-Github link: https://github.com/martin-carricas-asin/Dutch-Rent-Analysis
-
-*Data sources:*
-
-- Proximity to facilities, regional data: https://opendata.cbs.nl/portal.html?\_la=en&\_catalog=CBS&tableId=80305ENG&\_theme=1187
-
-- Rent increase data: https://opendata.cbs.nl/portal.html?\_la=en&\_catalog=CBS&tableId=83162ENG&\_theme=1175
-
-The the source of the datasets is CBS Open data Statline, the database of the Statistics Netherlands. This is an independent government institution responsible for gathering and publishing various official statistics about the Netherlands.
-
-The dataset on rent increase per region covers the period from 2015 to 2026 and describes the average rent increase accross the country, regions and provinces, both including harmonisation and excluding harmonisation. It includes the rent increase of regulated, mid-tier and liberalised dwellings. Rent increase is defined as the average change in rental prices over a year, with the maximum permitted rent increase determined by the dutch government. Rent harmonisation allows the rent to be increased higher than the maximum rent increase valid for that year when there is a change in tenancy. This is meant to allow the property to be rented at its current rental value. The new rent is still limited by the maximum rent based on the Ministry of Interior and Kingdom Relations' Rent Point System. This regulation targets situations in which, following a longterm lease, the previous rent is lower than the property's current rental value due to the limit on rent increases during the previous tenancy. The regions are identified by region codes and stored as characters, whereas the other variables are stored as doubles. The dataset contains no missing values. 
-
-The dataset on proximity to facilities per region records the average distance for residents from their homes to different types of facilities over the period from 2006 to 2025. In addition to the distance variables, the data set also contains variables recording the number of facilities within a given radius. They are calculated as an average over all persons in an area. The data is given  at the national, regional, provincial and municipal level.
-
-All distances are calculated based on the shortest driving distance (by car). Variables describing the distance to a facility are given in kilometre and stored as a double data type. The variables indicating the number of facilities within a given radius is recorded as an average number and also stored as a double. The region codes are the same as in the rent dataset and also stored as characters.
-Depending on the variable there are many missing values or none at all. For example the distance to youth health care centre variable shows 95% NA, the variable Distance to School 56 (Distance to primary schools) shows no missing values at all. These differences in missing values were caused by changes in the recorded values per year. Data on youth health care centers were only recorded in the first year (2006) while others have been continuously added to until now. 
-
-
-
-
-
 
 ## Individual Dataset Descriptives
 
@@ -273,7 +277,67 @@ proximity_rent <- proximity_clean |>
   inner_join(rent_clean, by=join_by(Regions, Periods))
 ```
 
+
 The two datasets are joined using `inner_join()`, and joined by `Regions` and `Periods`. Since for each region in the proximity dataset there are multiple periods of observations, both variables are necessary to identify the matching observation of the same region and period in the rent dataset. 
+
+### Computing means of variable groups and renaming
+
+Measured variables and Region Codes will be renamed in the joined dataset for better documentation in the following analysis
+
+```{r}
+#| echo: false
+proximity_rent <- proximity_rent|>
+  mutate(
+    health = rowMeans(across(c(
+      DistanceToGPPractice_1, DistanceToGPPost_5, DistanceToPharmacy_6,
+      DistanceToHospital_7, DistanceToHospital_11,
+      DistanceToYouthHealthCentre_15, DistanceToPhysiotherapist_16
+    )), na.rm = TRUE),
+    retail = rowMeans(across(c(
+      DistanceToLargeSupermarket_20, DistanceToShopForOtherDailyFood_24,
+      DistanceToDepartmentStore_28
+    )), na.rm = TRUE),
+    hosp = rowMeans(across(c(
+      DistanceToCafeEtc_32, DistanceToCafeteriaEtc_36,
+      DistanceToRestaurant_40, DistanceToHotelEtc_44
+    )), na.rm = TRUE),
+    childcare = rowMeans(across(c(
+      DistanceToDaycareCentres_48, DistanceToOutOfSchoolCare_52
+    )), na.rm = TRUE),
+    educ = rowMeans(across(c(
+      DistanceToSchool_56, DistanceToSchool_60,
+      DistanceToSchool_64, DistanceToSchool_68
+    )), na.rm = TRUE),
+    green = rowMeans(across(c(
+      DistanceToPublicGreenTotal_87, DistanceToSemiPublicGreenTotal_94,
+      DistanceToRecreationalInlandWaters_99
+    )), na.rm = TRUE),
+    trans = rowMeans(across(c(
+      DistanceToMainRoadEntrance_100, DistanceToTrainStationAllTypes_101
+    )), na.rm = TRUE),
+    leisure = rowMeans(across(c(
+      DistanceToLibrary_103, DistanceToIndoorSwimmingPool_104,
+      DistanceToArtificialIceSkatingRink_105, DistanceToMuseum_106,
+      DistanceToPerformingArts_110, DistanceToCinema_115,
+      DistanceToPopMusicVenue_114, DistanceToSauna_119,
+      DistanceToTanningSalon_120, DistanceToAttraction_121
+    )), na.rm = TRUE)
+  ) |>
+  rename(rent_incl=RentIncreaseIncludingHarmonisation_1,
+         rent_excl = RentIncreaseExcludingHarmonisation_2)
+```
+
+### Renaming regions
+Changing region codes to names for better readability in the following analysis.
+```{r}
+region_labels <- tibble(
+  Regions = c("N01","LD01", "LD02","LD03","LD04"),
+  Region_name = c("Total country", "North", "East", "West","South")
+)
+proximity_rent <- proximity_rent |>
+  left_join(region_labels, join_by(Regions))
+```
+
 
 
 ## Variable Description
@@ -283,13 +347,13 @@ The two datasets are joined using `inner_join()`, and joined by `Regions` and `P
 | rent_excl | Rent increase excluding harmonization only takes into account rents being increased by regular annual adjustments. |
 | rent_incl | Rent increase including harmonization is the regular annual rent adjustments plus the extra rise in rent for new tenants. |
 | health | Average distance for all residents in an area to rhe nearest health facilities, calculated by road (in km). |
-| retail | Average distance for all resident in an area to the nearest large supermarkets, cafeterias, restaurants, calculated by road (in km). |
-| hosp | Average distance for all resident in an area to the nearest hospitality like hotels and hostels, calculated by road (in km). |
+| retail | Average distance for all residents in an area to the nearest large supermarket and daily food and department stores, calculated by road (in km). |
+| hosp | Average distance for all resident in an area to the nearest hospitality like hotels/hostels, cafeterias, restaurants, calculated by road (in km). |
 | childcare | Average distance for all residents in an area to the nearest daycare, calculated by road (in km). |
-| educ | Average distance for all residents in an area to the nearest hospital, calculated by road (in km). |
-| green | Average distance for all residents in an area to the nearest public green area, calculated by road (in km). |
-| trans | Average distance for all residents in an area to the nearest main road, train station, festival, museums, calculated by road (in km). |
-| leisure | Average distance for all resident in an area to the nearest public library, festival, museums, calculated by road (in km). |
+| educ | Average distance for all residents in an area to the nearest school, calculated by road (in km). |
+| green | Average distance for all residents in an area to the nearest public green area and inland waters, calculated by road (in km). |
+| trans | Average distance for all residents in an area to the nearest main road, train station, calculated by road (in km). |
+| leisure | Average distance for all resident in an area to the nearest public library, festival, museums, etc., calculated by road (in km). |
 
 : Variable Description for `rent` and `proximity` dataset
 
@@ -301,8 +365,8 @@ The two datasets are joined using `inner_join()`, and joined by `Regions` and `P
 ```{r}
 #| echo: false
 common_limits <- range(
-  c(proximity_rent$RentIncreaseIncludingHarmonisation_1,
-    proximity_rent$RentIncreaseExcludingHarmonisation_2),
+  c(proximity_rent$rent_incl,
+    proximity_rent$rent_excl),
   na.rm = TRUE
 )
 ```
@@ -315,14 +379,14 @@ Subset of Regions: NL01 - country, LD01 - North, LD02 - East, LD03 - West, LD04 
 
 ::::: columns
 ::: {.column width="50%"}
-### Rent increase including Harmonisation
+#### Rent increase incl. Harmonization
 
 ```{r}
 #| echo: false
 proximity_rent |>  
-  filter(Regions %in% c("NL01", "LD01", "LD02","LD03","LD04")) |>
-  ggplot(aes(x=Periods,y=RentIncreaseIncludingHarmonisation_1, group = Regions,
-             color = Regions)) + 
+  filter(Region_name %in% c("Total country", "North", "East","West","South")) |>
+  ggplot(aes(x=Periods,y=rent_incl, group = Regions,
+             color = Region_name)) + 
   geom_line() +
   scale_y_continuous(limits = common_limits)
   
@@ -330,14 +394,14 @@ proximity_rent |>
 :::
 
 ::: {.column width="50%"}
-### Rent increase excluding Harmonisation
+#### Rent increase excl. Harmonization
 
 ```{r}
 #| echo: false
 proximity_rent |> 
-  filter(Regions %in% c("NL01", "LD01", "LD02","LD03","LD04")) |>
-  ggplot(aes(x=Periods,y=RentIncreaseExcludingHarmonisation_2, group = Regions,
-    color = Regions)) + 
+  filter(Region_name %in% c("Total country", "North", "East","West","South")) |>
+  ggplot(aes(x=Periods,y=rent_excl, group = Regions,
+    color = Region_name)) + 
   geom_line() +
   scale_y_continuous(limits = common_limits)
 
