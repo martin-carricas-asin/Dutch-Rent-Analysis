@@ -286,6 +286,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="region-names" class="level3">
 <h3 class="anchored" data-anchor-id="region-names">Region names</h3>
 <p>Changing region codes to names for better readability in the following analysis.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>region_labels <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Regions =</span> <span class="fu">c</span>(<span class="st">"N01"</span>,<span class="st">"LD01"</span>, <span class="st">"LD02"</span>,<span class="st">"LD03"</span>,<span class="st">"LD04"</span>),</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Region_name =</span> <span class="fu">c</span>(<span class="st">"Total country"</span>, <span class="st">"North"</span>, <span class="st">"East"</span>, <span class="st">"West"</span>,<span class="st">"South"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>proximity_rent <span class="ot">&lt;-</span> proximity_rent <span class="sc">|&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(region_labels, <span class="fu">join_by</span>(Regions))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
 </section>
 <section id="variable-description" class="level2">
@@ -351,11 +359,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="graphical-representation" class="level3">
 <h3 class="anchored" data-anchor-id="graphical-representation">Graphical Representation</h3>
 <p>Subset of Regions: NL01 - country, LD01 - North, LD02 - East, LD03 - West, LD04 - South</p>
-</section>
 <div class="columns">
 <div class="column" style="width:50%;">
-<section id="rent-increase-including-harmonization" class="level3">
-<h3 class="anchored" data-anchor-id="rent-increase-including-harmonization">Rent increase including Harmonization</h3>
+<section id="rent-increase-incl.-harmonization" class="level4">
+<h4 class="anchored" data-anchor-id="rent-increase-incl.-harmonization">Rent increase incl.&nbsp;Harmonization</h4>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -367,8 +374,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 </div><div class="column" style="width:50%;">
-<section id="rent-increase-excluding-harmonisation" class="level3">
-<h3 class="anchored" data-anchor-id="rent-increase-excluding-harmonisation">Rent increase excluding Harmonisation</h3>
+<section id="rent-increase-excl.-harmonization" class="level4">
+<h4 class="anchored" data-anchor-id="rent-increase-excl.-harmonization">Rent increase excl. Harmonization</h4>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -381,6 +388,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 </div>
 </div>
+</section>
 </section>
 
 </main>

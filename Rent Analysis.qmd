@@ -323,7 +323,12 @@ proximity_rent <- proximity_rent|>
 ### Region names
 Changing region codes to names for better readability in the following analysis.
 ```{r}
-
+region_labels <- tibble(
+  Regions = c("N01","LD01", "LD02","LD03","LD04"),
+  Region_name = c("Total country", "North", "East", "West","South")
+)
+proximity_rent <- proximity_rent |>
+  left_join(region_labels, join_by(Regions))
 ```
 
 
@@ -363,14 +368,14 @@ Subset of Regions: NL01 - country, LD01 - North, LD02 - East, LD03 - West, LD04 
 
 ::::: columns
 ::: {.column width="50%"}
-### Rent increase including Harmonization
+#### Rent increase incl. Harmonization
 
 ```{r}
 #| echo: false
 proximity_rent |>  
-  filter(Regions %in% c("NL01", "LD01", "LD02","LD03","LD04")) |>
+  filter(Region_name %in% c("Total country", "North", "East","West","South")) |>
   ggplot(aes(x=Periods,y=rent_incl, group = Regions,
-             color = Regions)) + 
+             color = Region_name)) + 
   geom_line() +
   scale_y_continuous(limits = common_limits)
   
@@ -378,14 +383,14 @@ proximity_rent |>
 :::
 
 ::: {.column width="50%"}
-### Rent increase excluding Harmonisation
+#### Rent increase excl. Harmonization
 
 ```{r}
 #| echo: false
 proximity_rent |> 
-  filter(Regions %in% c("NL01", "LD01", "LD02","LD03","LD04")) |>
+  filter(Region_name %in% c("Total country", "North", "East","West","South")) |>
   ggplot(aes(x=Periods,y=rent_excl, group = Regions,
-    color = Regions)) + 
+    color = Region_name)) + 
   geom_line() +
   scale_y_continuous(limits = common_limits)
 
