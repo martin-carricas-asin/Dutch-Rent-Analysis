@@ -273,6 +273,9 @@ proximity_rent <- proximity_clean |>
   inner_join(rent_clean, by=join_by(Regions, Periods))
 ```
 
+The two datasets are joined using `inner_join()`, and joined by `Regions` and `Periods`. Since for each region in the proximity dataset there are multiple periods of observations, both variables are necessary to identify the matching observation of the same region and period in the rent dataset. 
+
+
 ## Variable Description
 
 | Variable | Description |
@@ -289,6 +292,9 @@ proximity_rent <- proximity_clean |>
 | leisure | Average distance for all resident in an area to the nearest public library, festival, museums, calculated by road (in km). |
 
 : Variable Description for `rent` and `proximity` dataset
+
+## Research Question
+
 
 ## Main Variable: Rent
 
