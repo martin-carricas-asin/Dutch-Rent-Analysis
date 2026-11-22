@@ -108,6 +108,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<section id="research-question" class="level2">
+<h2 class="anchored" data-anchor-id="research-question">Research question</h2>
+<p>Housing has become a severe problem in many countries. Young people who have not yet been able to buy a home depend on renting, and the shortage of housing is hurting them badly. At its core, this is a simple supply-demand problem: high demand and not enough supply. Yet a simple supply-demand mechanism is not the only explanation for rent prices. If they could, every home would cost the same to rent, which is clearly not the case. Location matters. The quality of life in an area depends on how close residents are to certain infrastructure, and living in a remote town is usually cheaper than living in a central city.</p>
+<p>This raises two questions: which infrastructure drives housing costs, and do some types matter more than others? We use the Netherlands as a case study. This project analyses rent increases in 10 years time (2015-2025) relate to the distance to different types of infrastructure across 12 Dutch regions.</p>
+</section>
 <section id="period-column-cleaning" class="level2">
 <h2 class="anchored" data-anchor-id="period-column-cleaning">Period column cleaning</h2>
 <p><code>Periods</code> is stored as character in the raw data because each value carries a “JJ” suffix (e.g.&nbsp;“2019JJ”). Here <code>Periods</code> is converted to numeric while eliminating the “JJ” suffix behind the according year.</p>
@@ -132,11 +137,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="data-description" class="level2">
 <h2 class="anchored" data-anchor-id="data-description">Data description</h2>
-<p>Github link: https://github.com/martin-carricas-asin/Dutch-Rent-Analysis</p>
-<p><em>Data sources:</em></p>
+<p><a href="https://github.com/martin-carricas-asin/Dutch-Rent-Analysis">Github repository</a></p>
+<p><strong>Data sources:</strong></p>
 <ul>
-<li><p>Proximity to facilities, regional data: https://opendata.cbs.nl/portal.html?_la=en&amp;_catalog=CBS&amp;tableId=80305ENG&amp;_theme=1187</p></li>
-<li><p>Rent increase data: https://opendata.cbs.nl/portal.html?_la=en&amp;_catalog=CBS&amp;tableId=83162ENG&amp;_theme=1175</p></li>
+<li><p><a href="https://opendata.cbs.nl/portal.html?_la=en&amp;_catalog=CBS&amp;tableId=80305ENG&amp;_theme=1187">Proximity to facilities, regional data</a></p></li>
+<li><p><a href="https://opendata.cbs.nl/portal.html?_la=en&amp;_catalog=CBS&amp;tableId=83162ENG&amp;_theme=1175">Rent increase data</a></p></li>
 </ul>
 <p>The the source of the datasets is CBS Open data Statline, the database of the Statistics Netherlands. This is an independent government institution responsible for gathering and publishing various official statistics about the Netherlands.</p>
 <p>The dataset on rent increase per region covers the period from 2015 to 2026 and describes the average rent increase accross the country, regions and provinces, both including harmonisation and excluding harmonisation. It includes the rent increase of regulated, mid-tier and liberalised dwellings. Rent increase is defined as the average change in rental prices over a year, with the maximum permitted rent increase determined by the dutch government. Rent harmonisation allows the rent to be increased higher than the maximum rent increase valid for that year when there is a change in tenancy. This is meant to allow the property to be rented at its current rental value. The new rent is still limited by the maximum rent based on the Ministry of Interior and Kingdom Relations’ Rent Point System. This regulation targets situations in which, following a longterm lease, the previous rent is lower than the property’s current rental value due to the limit on rent increases during the previous tenancy. The regions are identified by region codes and stored as characters, whereas the other variables are stored as doubles. The dataset contains no missing values.</p>

@@ -168,6 +168,12 @@ rent <- vroom(here("data","CBS Rents.csv"),
 ))
 ```
 
+## Research question
+
+Housing has become a severe problem in many countries. Young people who have not yet been able to buy a home depend on renting, and the shortage of housing is hurting them badly. At its core, this is a simple supply-demand problem: high demand and not enough supply. Yet a simple supply-demand mechanism is not the only explanation for rent prices. If they could, every home would cost the same to rent, which is clearly not the case. Location matters. The quality of life in an area depends on how close residents are to certain infrastructure, and living in a remote town is usually cheaper than living in a central city.
+
+This raises two questions: which infrastructure drives housing costs, and do some types matter more than others? We use the Netherlands as a case study. This project analyses rent increases in 10 years time (2015-2025) relate to the distance to different types of infrastructure across 12 Dutch regions.
+
 ## Period column cleaning
 
 `Periods` is stored as character in the raw data because each value carries a “JJ” suffix (e.g. “2019JJ”). Here `Periods` is converted to numeric while eliminating the "JJ" suffix behind the according year.
@@ -196,13 +202,13 @@ rent_clean <- rent |>
 
 ## Data description
 
-Github link: https://github.com/martin-carricas-asin/Dutch-Rent-Analysis
+[Github repository](https://github.com/martin-carricas-asin/Dutch-Rent-Analysis)
 
-*Data sources:*
+**Data sources:**
 
-- Proximity to facilities, regional data: https://opendata.cbs.nl/portal.html?\_la=en&\_catalog=CBS&tableId=80305ENG&\_theme=1187
+- [Proximity to facilities, regional data](https://opendata.cbs.nl/portal.html?\_la=en&\_catalog=CBS&tableId=80305ENG&\_theme=1187)
 
-- Rent increase data: https://opendata.cbs.nl/portal.html?\_la=en&\_catalog=CBS&tableId=83162ENG&\_theme=1175
+- [Rent increase data](https://opendata.cbs.nl/portal.html?\_la=en&\_catalog=CBS&tableId=83162ENG&\_theme=1175)
 
 The the source of the datasets is CBS Open data Statline, the database of the Statistics Netherlands. This is an independent government institution responsible for gathering and publishing various official statistics about the Netherlands.
 
